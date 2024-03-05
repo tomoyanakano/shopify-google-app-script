@@ -1,2 +1,5 @@
 node_modules/
 build/
+
+# Ignore the clasp.json file, which is used to configure the clasp CLI
+.clasp.json.*
