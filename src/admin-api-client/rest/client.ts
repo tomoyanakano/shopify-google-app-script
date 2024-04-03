@@ -5,7 +5,7 @@ import {
   DEFAULT_RETRY_WAIT_TIME,
   RETRIABLE_STATUS_CODES,
 } from "../../constants";
-import { getCurrentSupportedApiVersions } from "../../libs/api-versions";
+import { getCurrentSupportedApiVersions_ } from "../../libs/api-versions";
 import {
   validateApiVersion,
   validateDomainAndGetStoreUrl,
@@ -61,7 +61,7 @@ export class AdminRestApiClient {
       formatPaths?: boolean;
     },
   ): ApiResponse<TResponse> {
-    const currentSupportedApiVersions = getCurrentSupportedApiVersions();
+    const currentSupportedApiVersions = getCurrentSupportedApiVersions_();
     //
     const storeUrl = validateDomainAndGetStoreUrl({
       client: CLIENT,

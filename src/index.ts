@@ -1,13 +1,17 @@
 import { AdminRestApiClient } from "./admin-api-client/rest/client";
 
-const restCliet = ({
-  storeDomain,
-  accessToken,
-  apiVersion,
-}: {
-  storeDomain: string;
-  accessToken: string;
-  apiVersion: string;
-}) => {
+/**
+ * Create a new instance of the AdminRestApiClient
+ *
+ * @param {string} storeDomain - The domain of the store
+ * @param {string} accessToken - The access token to authenticate the requests
+ * @param {string} apiVersion - The version of the API to use
+ * @returns {AdminRestApiClient} - The instance of the AdminRestApiClient
+ * */
+const restCliet = (
+  storeDomain: string,
+  accessToken: string,
+  apiVersion: string,
+) => {
   return new AdminRestApiClient(storeDomain, accessToken, apiVersion);
 };
