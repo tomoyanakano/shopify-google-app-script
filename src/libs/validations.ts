@@ -1,4 +1,4 @@
-import { CLIENT } from "../constants";
+import { CLIENT, MAX_RETRIES, MIN_RETRIES } from "../constants";
 
 export const validateApiVersion = ({
   client,
@@ -45,11 +45,9 @@ export function validateDomainAndGetStoreUrl({
       ? trimmedDomain
       : `https://${trimmedDomain}`;
 
-    const url = new URL(protocolUrl);
-    url.protocol = "https";
-
-    return url.origin;
+    return protocolUrl;
   } catch (_error) {
+    console.error(_error);
     throw new Error(
       `${client}: a valid store domain ("${storeDomain}") must be provided`,
     );

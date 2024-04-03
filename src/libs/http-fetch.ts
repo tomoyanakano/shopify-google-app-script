@@ -54,6 +54,12 @@ export const generateHttpFetch = ({
         return httpFetch(url, requestParams, nextCount, maxRetries);
       }
 
+      console.error(
+        `${client}: failed to fetch data after ${maxTries} attempts`,
+      );
+
+      console.error(error);
+
       throw new Error();
     }
   };

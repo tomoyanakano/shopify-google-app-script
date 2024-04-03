@@ -1,30 +1,33 @@
 export const generateApiUrlFormatter = (
   storeUrl: string,
   defaultApiVersion: string,
-  formatPaths = true,
+  formatPaths: boolean = true,
 ) => {
+  const convertSearchParamsToString = (
+    params: Record<string, any>,
+    prefix: string = "",
+  ): string[] => {
+    let parts: string[] = [];
+    Object.keys(params).forEach((key) => {
+      const fullKey = prefix ? `${prefix}[${key}]` : key;
+      const value = params[key];
+      if (value !== null && typeof value === "object") {
+        parts = parts.concat(convertSearchParamsToString(value, fullKey));
+      } else {
+        parts.push(
+          `${encodeURIComponent(fullKey)}=${encodeURIComponent(String(value))}`,
+        );
+      }
+    });
+    return parts;
+  };
+
   return (
     path: string,
     searchParams: Record<string, any>,
-    apiVersion?: string,
-  ) => {
-    function convertValue(params: URLSearchParams, key: string, value: any) {
-      if (Array.isArray(value)) {
-        value.forEach((arrayValue) =>
-          convertValue(params, `${key}[]`, arrayValue),
-        );
-        return;
-      } else if (typeof value === "object") {
-        Object.entries(value).forEach(([objKey, objValue]) =>
-          convertValue(params, `${key}[${objKey}]`, objValue),
-        );
-        return;
-      }
-
-      params.append(key, String(value));
-    }
-
-    const urlApiVersion = (apiVersion ?? defaultApiVersion).trim();
+    apiVersion: string = defaultApiVersion,
+  ): string => {
+    const urlApiVersion = apiVersion.trim();
     let cleanPath = path.replace(/^\//, "");
     if (formatPaths) {
       if (!cleanPath.startsWith("admin")) {
@@ -35,13 +38,8 @@ export const generateApiUrlFormatter = (
       }
     }
 
-    const params = new URLSearchParams();
-    if (searchParams) {
-      for (const [key, value] of Object.entries(searchParams)) {
-        convertValue(params, key, value);
-      }
-    }
-    const queryString = params.toString() ? `?${params.toString()}` : "";
+    const paramsString = convertSearchParamsToString(searchParams).join("&");
+    const queryString = paramsString ? `?${paramsString}` : "";
 
     return `${storeUrl}/${cleanPath}${queryString}`;
   };

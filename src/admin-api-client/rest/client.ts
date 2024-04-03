@@ -117,42 +117,66 @@ export class AdminRestApiClient {
   }
 
   /**
+   * Get request
    *
+   * @param path
+   * @param options
    */
-  public get<TResponse = unknown>(
-    path: string,
-    options?: GetRequestOptions,
-  ): ApiResponse<TResponse> {
+  public get<TResponse = unknown>({
+    path,
+    options,
+  }: {
+    path: string;
+    options?: GetRequestOptions;
+  }): ApiResponse<TResponse> {
     return this.request(path, { method: "get", ...options });
   }
 
   /**
+   * Put request
    *
+   * @param path
+   * @param options
    */
-  public put<TResponse = unknown>(
-    path: string,
-    options?: PutRequestOptions,
-  ): ApiResponse<TResponse> {
+  public put<TResponse = unknown>({
+    path,
+    options,
+  }: {
+    path: string;
+    options?: PutRequestOptions;
+  }): ApiResponse<TResponse> {
     return this.request<TResponse>(path, { method: "put", ...options });
   }
 
   /**
+   * Post request
    *
+   * @param path
+   * @param options
    */
-  public post<TResponse = unknown>(
-    path: string,
-    options?: PostRequestOptions,
-  ): ApiResponse<TResponse> {
+  public post<TResponse = unknown>({
+    path,
+    options,
+  }: {
+    path: string;
+    options?: PostRequestOptions;
+  }): ApiResponse<TResponse> {
     return this.request<TResponse>(path, { method: "post", ...options });
   }
 
   /**
+   * Delete request
    *
+   * @param path
+   * @param options
    */
-  public delete<TResponse = unknown>(
-    path: string,
-    options?: DeleteRequestOptions,
-  ): ApiResponse<TResponse> {
+  public delete<TResponse = unknown>({
+    path,
+    options,
+  }: {
+    path: string;
+    options?: DeleteRequestOptions;
+  }): ApiResponse<TResponse> {
     return this.request<TResponse>(path, { method: "delete", ...options });
   }
 }
