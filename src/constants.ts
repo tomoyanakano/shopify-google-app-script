@@ -6,3 +6,6 @@ export const ACCESS_TOKEN_HEADER = "X-Shopify-Access-Token";
 export const CLIENT = "Admin API Client";
 export const RETRIABLE_STATUS_CODES = [429, 500, 503];
 export const DEFAULT_RETRY_WAIT_TIME = 1000;
+
+export const MIN_RETRIES = 0;
+export const MAX_RETRIES = 3;

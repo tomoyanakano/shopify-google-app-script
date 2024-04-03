@@ -15,3 +15,9 @@ export type ApiResponse<T> = {
   data?: T;
   statusCode: number;
 };
+
+export type StoreConfig = {
+  domain: string;
+  apiKey: string;
+  apiVersion: ApiVersion;
+};

@@ -1,6 +1,6 @@
-import { CLIENT } from "../constants";
+import { CLIENT, MAX_RETRIES, MIN_RETRIES } from "../constants";
 
-export const validateApiVersion = ({
+export const validateApiVersion_ = ({
   client,
   currentSupportedApiVersions,
   apiVersion,
@@ -27,7 +27,7 @@ export const validateApiVersion = ({
   }
 };
 
-export function validateDomainAndGetStoreUrl({
+export function validateDomainAndGetStoreUrl_({
   client,
   storeDomain,
 }: {
@@ -45,30 +45,28 @@ export function validateDomainAndGetStoreUrl({
       ? trimmedDomain
       : `https://${trimmedDomain}`;
 
-    const url = new URL(protocolUrl);
-    url.protocol = "https";
-
-    return url.origin;
+    return protocolUrl;
   } catch (_error) {
+    console.error(_error);
     throw new Error(
       `${client}: a valid store domain ("${storeDomain}") must be provided`,
     );
   }
 }
 
-export function validateRequiredAccessToken(accessToken: string) {
+export function validateRequiredAccessToken_(accessToken: string) {
   if (!accessToken) {
     throw new Error(`${CLIENT}: an access token must be provided`);
   }
 }
 
-export function validateServerSideUsage() {
+export function validateServerSideUsage_() {
   if (typeof window !== "undefined") {
     throw new Error(`${CLIENT}: this client should not be used in the browser`);
   }
 }
 
-export function validateRetries({
+export function validateRetries_({
   client,
   retries,
 }: {

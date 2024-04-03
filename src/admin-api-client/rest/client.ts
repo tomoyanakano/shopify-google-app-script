@@ -5,23 +5,27 @@ import {
   DEFAULT_RETRY_WAIT_TIME,
   RETRIABLE_STATUS_CODES,
 } from "../../constants";
-import { getCurrentSupportedApiVersions } from "../../libs/api-versions";
+import { getCurrentSupportedApiVersions_ } from "../../libs/api-versions";
 import {
-  validateApiVersion,
-  validateDomainAndGetStoreUrl,
-  validateRequiredAccessToken,
-  validateRetries,
+  validateApiVersion_,
+  validateDomainAndGetStoreUrl_,
+  validateRequiredAccessToken_,
+  validateRetries_,
 } from "../../libs/validations";
-import { generateApiUrlFormatter } from "../../libs/formatters";
-import { ApiResponse } from "../../types";
+import { generateApiUrlFormatter_ } from "../../libs/formatters";
+import { ApiResponse, LATEST_API_VERSION } from "../../types";
 import {
   GetRequestOptions,
   PostRequestOptions,
   PutRequestOptions,
   DeleteRequestOptions,
 } from "./types";
-import { generateHttpFetch } from "../../libs/http-fetch";
+import { generateHttpFetch_ } from "../../libs/http-fetch";
 
+/**
+ * @class
+ * Admin Rest API Client
+ */
 export class AdminRestApiClient {
   private storeDomain: string;
   private accessToken: string;
@@ -31,15 +35,22 @@ export class AdminRestApiClient {
   constructor(
     storeDomain: string,
     accessToken: string,
-    apiVersion: string,
+    apiVersion?: string,
     scheme?: "https" | "http",
   ) {
     this.storeDomain = storeDomain;
     this.accessToken = accessToken;
-    this.apiVersion = apiVersion;
+    this.apiVersion = apiVersion || LATEST_API_VERSION;
     this.scheme = scheme || "https";
   }
 
+  /**
+   * Make a request to the Shopify Admin API
+   *
+   * @param path
+   * @param options
+   * @returns {ApiResponse<TResponse>}
+   */
   private request<TResponse>(
     path: string,
     {
@@ -61,28 +72,28 @@ export class AdminRestApiClient {
       formatPaths?: boolean;
     },
   ): ApiResponse<TResponse> {
-    const currentSupportedApiVersions = getCurrentSupportedApiVersions();
+    const currentSupportedApiVersions = getCurrentSupportedApiVersions_();
     //
-    const storeUrl = validateDomainAndGetStoreUrl({
+    const storeUrl = validateDomainAndGetStoreUrl_({
       client: CLIENT,
       storeDomain: this.storeDomain,
     }).replace("https://", `${this.scheme}://`);
 
-    validateApiVersion({
+    validateApiVersion_({
       client: CLIENT,
       currentSupportedApiVersions,
       apiVersion: this.apiVersion,
     });
-    validateRequiredAccessToken(this.accessToken);
-    validateRetries({ client: CLIENT, retries: clientRetries });
+    validateRequiredAccessToken_(this.accessToken);
+    validateRetries_({ client: CLIENT, retries: clientRetries });
 
-    const apiUrlFormatter = generateApiUrlFormatter(
+    const apiUrlFormatter = generateApiUrlFormatter_(
       storeUrl,
       this.apiVersion,
       formatPaths,
     );
 
-    const httpFetch = generateHttpFetch({
+    const httpFetch = generateHttpFetch_({
       defaultRetryWaitTime: defaultRetryTime,
       client: CLIENT,
       retriableCodes: RETRIABLE_STATUS_CODES,
@@ -117,42 +128,66 @@ export class AdminRestApiClient {
   }
 
   /**
+   * Get request
    *
+   * @param path
+   * @param options
    */
-  public get<TResponse = unknown>(
-    path: string,
-    options?: GetRequestOptions,
-  ): ApiResponse<TResponse> {
+  public get<TResponse = unknown>({
+    path,
+    options,
+  }: {
+    path: string;
+    options?: GetRequestOptions;
+  }): ApiResponse<TResponse> {
     return this.request(path, { method: "get", ...options });
   }
 
   /**
+   * Put request
    *
+   * @param path
+   * @param options
    */
-  public put<TResponse = unknown>(
-    path: string,
-    options?: PutRequestOptions,
-  ): ApiResponse<TResponse> {
+  public put<TResponse = unknown>({
+    path,
+    options,
+  }: {
+    path: string;
+    options?: PutRequestOptions;
+  }): ApiResponse<TResponse> {
     return this.request<TResponse>(path, { method: "put", ...options });
   }
 
   /**
+   * Post request
    *
+   * @param path
+   * @param options
    */
-  public post<TResponse = unknown>(
-    path: string,
-    options?: PostRequestOptions,
-  ): ApiResponse<TResponse> {
+  public post<TResponse = unknown>({
+    path,
+    options,
+  }: {
+    path: string;
+    options?: PostRequestOptions;
+  }): ApiResponse<TResponse> {
     return this.request<TResponse>(path, { method: "post", ...options });
   }
 
   /**
+   * Delete request
    *
+   * @param path
+   * @param options
    */
-  public delete<TResponse = unknown>(
-    path: string,
-    options?: DeleteRequestOptions,
-  ): ApiResponse<TResponse> {
+  public delete<TResponse = unknown>({
+    path,
+    options,
+  }: {
+    path: string;
+    options?: DeleteRequestOptions;
+  }): ApiResponse<TResponse> {
     return this.request<TResponse>(path, { method: "delete", ...options });
   }
 }
