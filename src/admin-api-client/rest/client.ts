@@ -7,12 +7,12 @@ import {
 } from "../../constants";
 import { getCurrentSupportedApiVersions_ } from "../../libs/api-versions";
 import {
-  validateApiVersion,
-  validateDomainAndGetStoreUrl,
-  validateRequiredAccessToken,
-  validateRetries,
+  validateApiVersion_,
+  validateDomainAndGetStoreUrl_,
+  validateRequiredAccessToken_,
+  validateRetries_,
 } from "../../libs/validations";
-import { generateApiUrlFormatter } from "../../libs/formatters";
+import { generateApiUrlFormatter_ } from "../../libs/formatters";
 import { ApiResponse } from "../../types";
 import {
   GetRequestOptions,
@@ -20,7 +20,7 @@ import {
   PutRequestOptions,
   DeleteRequestOptions,
 } from "./types";
-import { generateHttpFetch } from "../../libs/http-fetch";
+import { generateHttpFetch_ } from "../../libs/http-fetch";
 
 export class AdminRestApiClient {
   private storeDomain: string;
@@ -63,26 +63,26 @@ export class AdminRestApiClient {
   ): ApiResponse<TResponse> {
     const currentSupportedApiVersions = getCurrentSupportedApiVersions_();
     //
-    const storeUrl = validateDomainAndGetStoreUrl({
+    const storeUrl = validateDomainAndGetStoreUrl_({
       client: CLIENT,
       storeDomain: this.storeDomain,
     }).replace("https://", `${this.scheme}://`);
 
-    validateApiVersion({
+    validateApiVersion_({
       client: CLIENT,
       currentSupportedApiVersions,
       apiVersion: this.apiVersion,
     });
-    validateRequiredAccessToken(this.accessToken);
-    validateRetries({ client: CLIENT, retries: clientRetries });
+    validateRequiredAccessToken_(this.accessToken);
+    validateRetries_({ client: CLIENT, retries: clientRetries });
 
-    const apiUrlFormatter = generateApiUrlFormatter(
+    const apiUrlFormatter = generateApiUrlFormatter_(
       storeUrl,
       this.apiVersion,
       formatPaths,
     );
 
-    const httpFetch = generateHttpFetch({
+    const httpFetch = generateHttpFetch_({
       defaultRetryWaitTime: defaultRetryTime,
       client: CLIENT,
       retriableCodes: RETRIABLE_STATUS_CODES,

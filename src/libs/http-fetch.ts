@@ -10,7 +10,7 @@ interface GenerateHttpFetchOptions {
   retriableCodes?: number[];
 }
 
-export const generateHttpFetch = ({
+export const generateHttpFetch_ = ({
   client = CLIENT,
   defaultRetryWaitTime = DEFAULT_RETRY_WAIT_TIME,
   retriableCodes = RETRIABLE_STATUS_CODES,

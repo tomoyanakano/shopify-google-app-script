@@ -1,4 +1,4 @@
-export const generateApiUrlFormatter = (
+export const generateApiUrlFormatter_ = (
   storeUrl: string,
   defaultApiVersion: string,
   formatPaths: boolean = true,

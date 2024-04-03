@@ -8,10 +8,10 @@ import { AdminRestApiClient } from "./admin-api-client/rest/client";
  * @param {string} apiVersion - The version of the API to use
  * @returns {AdminRestApiClient} - The instance of the AdminRestApiClient
  * */
-const restCliet = (
+function restClient(
   storeDomain: string,
   accessToken: string,
   apiVersion: string,
-) => {
+) {
   return new AdminRestApiClient(storeDomain, accessToken, apiVersion);
-};
+}
