@@ -13,7 +13,7 @@ import {
   validateRetries_,
 } from "../../libs/validations";
 import { generateApiUrlFormatter_ } from "../../libs/formatters";
-import { ApiResponse } from "../../types";
+import { ApiResponse, LATEST_API_VERSION } from "../../types";
 import {
   GetRequestOptions,
   PostRequestOptions,
@@ -22,6 +22,10 @@ import {
 } from "./types";
 import { generateHttpFetch_ } from "../../libs/http-fetch";
 
+/**
+ * @class
+ * Admin Rest API Client
+ */
 export class AdminRestApiClient {
   private storeDomain: string;
   private accessToken: string;
@@ -31,15 +35,22 @@ export class AdminRestApiClient {
   constructor(
     storeDomain: string,
     accessToken: string,
-    apiVersion: string,
+    apiVersion?: string,
     scheme?: "https" | "http",
   ) {
     this.storeDomain = storeDomain;
     this.accessToken = accessToken;
-    this.apiVersion = apiVersion;
+    this.apiVersion = apiVersion || LATEST_API_VERSION;
     this.scheme = scheme || "https";
   }
 
+  /**
+   * Make a request to the Shopify Admin API
+   *
+   * @param path
+   * @param options
+   * @returns {ApiResponse<TResponse>}
+   */
   private request<TResponse>(
     path: string,
     {
