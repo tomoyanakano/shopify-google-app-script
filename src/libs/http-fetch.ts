@@ -2,7 +2,7 @@ import {
   CLIENT,
   DEFAULT_RETRY_WAIT_TIME,
   RETRIABLE_STATUS_CODES,
-} from "../constants";
+} from "../admin-api-client/constants";
 
 interface GenerateHttpFetchOptions {
   client?: string;

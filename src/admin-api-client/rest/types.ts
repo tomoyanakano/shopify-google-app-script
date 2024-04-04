@@ -1,4 +1,5 @@
 type SearchParamField = string | number;
+
 export type SearchParamFields =
   | SearchParamField
   | SearchParamField[]
@@ -27,8 +28,3 @@ export type RequestOptions = (GetRequestOptions | PostRequestOptions) & {
   method: GoogleAppsScript.URL_Fetch.HttpMethod;
 };
 
-export interface AdminRestApiClientOptions extends AdminApiClientOptions {
-  scheme?: "https" | "http";
-  defaultRetryTime?: number;
-  formatPaths?: boolean;
-}
