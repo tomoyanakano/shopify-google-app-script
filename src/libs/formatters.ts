@@ -1,4 +1,6 @@
-export const generateApiUrlFormatter_ = (
+import { validateApiVersion_ } from "./validations";
+
+export const generateRestApiUrlFormatter_ = (
   storeUrl: string,
   defaultApiVersion: string,
   formatPaths: boolean = true,
@@ -44,3 +46,27 @@ export const generateApiUrlFormatter_ = (
     return `${storeUrl}/${cleanPath}${queryString}`;
   };
 };
+
+export const generateGraphQLApiUrlFormatter_ = (
+  storeUrl: string,
+  defaultApiVersion: string,
+  baseApiVersionValidationParams: Omit<
+    Parameters<typeof validateApiVersion_>[0],
+    "apiVersion"
+  >,
+) => {
+  return (apiVersion?: string) => {
+    if (apiVersion) {
+      validateApiVersion_({
+        ...baseApiVersionValidationParams,
+        apiVersion,
+      });
+    }
+
+    const urlApiVersion = (apiVersion ?? defaultApiVersion).trim();
+
+    return `${storeUrl}/admin/api/${urlApiVersion}/graphql.json`;
+  };
+}
+
+

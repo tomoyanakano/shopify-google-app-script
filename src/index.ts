@@ -1,4 +1,4 @@
-import { AdminRestApiClient } from "./admin-api-client/rest/client";
+import { AdminRestApiClient, createAdminRestApiClient_ } from "./admin-api-client/rest/client";
 
 /**
  * Create a new instance of the AdminRestApiClient
@@ -12,6 +12,10 @@ function restClient(
   storeDomain: string,
   accessToken: string,
   apiVersion: string,
-) {
-  return new AdminRestApiClient(storeDomain, accessToken, apiVersion);
+): AdminRestApiClient {
+  return createAdminRestApiClient_({
+    storeDomain,
+    accessToken,
+    apiVersion,
+  })
 }

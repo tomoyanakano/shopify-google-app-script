@@ -4,15 +4,16 @@ import {
   DEFAULT_CONTENT_TYPE,
   DEFAULT_RETRY_WAIT_TIME,
   RETRIABLE_STATUS_CODES,
-} from "../../constants";
+} from "../constants";
 import { getCurrentSupportedApiVersions_ } from "../../libs/api-versions";
 import {
   validateApiVersion_,
   validateDomainAndGetStoreUrl_,
   validateRequiredAccessToken_,
   validateRetries_,
+  validateServerSideUsage_,
 } from "../../libs/validations";
-import { generateApiUrlFormatter_ } from "../../libs/formatters";
+import { generateRestApiUrlFormatter_ } from "../../libs/formatters";
 import { ApiResponse, LATEST_API_VERSION } from "../../types";
 import {
   GetRequestOptions,
@@ -27,21 +28,18 @@ import { generateHttpFetch_ } from "../../libs/http-fetch";
  * Admin Rest API Client
  */
 export class AdminRestApiClient {
-  private storeDomain: string;
+  private storeUrl: string;
   private accessToken: string;
   private apiVersion: string;
-  private scheme: "https" | "http";
 
   constructor(
     storeDomain: string,
     accessToken: string,
     apiVersion?: string,
-    scheme?: "https" | "http",
   ) {
-    this.storeDomain = storeDomain;
+    this.storeUrl = storeDomain;
     this.accessToken = accessToken;
     this.apiVersion = apiVersion || LATEST_API_VERSION;
-    this.scheme = scheme || "https";
   }
 
   /**
@@ -72,23 +70,9 @@ export class AdminRestApiClient {
       formatPaths?: boolean;
     },
   ): ApiResponse<TResponse> {
-    const currentSupportedApiVersions = getCurrentSupportedApiVersions_();
-    //
-    const storeUrl = validateDomainAndGetStoreUrl_({
-      client: CLIENT,
-      storeDomain: this.storeDomain,
-    }).replace("https://", `${this.scheme}://`);
-
-    validateApiVersion_({
-      client: CLIENT,
-      currentSupportedApiVersions,
-      apiVersion: this.apiVersion,
-    });
-    validateRequiredAccessToken_(this.accessToken);
     validateRetries_({ client: CLIENT, retries: clientRetries });
-
-    const apiUrlFormatter = generateApiUrlFormatter_(
-      storeUrl,
+    const apiUrlFormatter = generateRestApiUrlFormatter_(
+      this.storeUrl,
       this.apiVersion,
       formatPaths,
     );
@@ -190,4 +174,41 @@ export class AdminRestApiClient {
   }): ApiResponse<TResponse> {
     return this.request<TResponse>(path, { method: "delete", ...options });
   }
+}
+
+
+/**
+ * Create a new instance of the AdminRestApiClient
+ * Validate the store domain and access token
+ * Validate the API version
+ *
+ * @param {string} storeDomain - The domain of the store
+ * @param {string} accessToken - The access token to authenticate the requests
+ * @param {string} [apiVersion=Latest Api Version] - The version of the API to use
+ * @returns {AdminRestApiClient} - The instance of the AdminRestApiClient
+ */
+export const createAdminRestApiClient_ = ({
+  storeDomain,
+  accessToken,
+  apiVersion = LATEST_API_VERSION,
+}: {
+  storeDomain: string;
+  accessToken: string;
+  apiVersion?: string;
+}) => {
+  const currentSupportedApiVersions = getCurrentSupportedApiVersions_();
+  const storeUrl = validateDomainAndGetStoreUrl_({
+    client: CLIENT,
+    storeDomain: storeDomain,
+  });
+
+  validateServerSideUsage_();
+  validateApiVersion_({
+    client: CLIENT,
+    currentSupportedApiVersions,
+    apiVersion: apiVersion,
+  });
+  validateRequiredAccessToken_(accessToken);
+
+  return new AdminRestApiClient(storeUrl, accessToken, apiVersion); 
 }

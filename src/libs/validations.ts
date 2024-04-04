@@ -1,5 +1,16 @@
-import { CLIENT, MAX_RETRIES, MIN_RETRIES } from "../constants";
+import { CLIENT, MAX_RETRIES, MIN_RETRIES } from "../admin-api-client/constants";
 
+/**
+ * Validate the provided API version
+ *
+ * @param {string} client - The name of the client
+ * @param {string[]} currentSupportedApiVersions - The currently supported API versions
+ * @param {string} apiVersion - The API version to validate
+ * @returns {void}
+ *
+ * @throws {Error} - If the provided API version is invalid
+ * @throws {Error} - If the provided API version is likely deprecated or not supported
+ * */
 export const validateApiVersion_ = ({
   client,
   currentSupportedApiVersions,
