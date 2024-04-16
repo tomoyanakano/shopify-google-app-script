@@ -1,4 +1,4 @@
-# Shopify Library for Google App Script 
+# Shopify Library for Google Apps Script 
 
 ## Installation
 
